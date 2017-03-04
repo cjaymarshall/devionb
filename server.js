@@ -1,9 +1,8 @@
-//var PORT = process.env.PORT||3000;
+var PORT = process.env.PORT||3000;
 //set express variable to require the express module-instantiates an instance of express
 var express = require('express');
 // set app variable to the express function
 var app = express();
-var PORT = 3000;
 var middleware = require('./middleware.js')
 
 //var http = require('http').Server(app);
