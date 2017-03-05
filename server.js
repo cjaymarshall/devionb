@@ -304,7 +304,28 @@ app.post('/useThisArray', function (req,res) {
 
 });
 
+app.delete('/useThisArray/:ionId', function (req, res) {
+	//res.json('Asking for ion with id of ' + req.params.ionId);
 
+	var ionIda = parseInt(req.params.ionId, 10);
+	var matchedIonId = _.findWhere(useThisArray, {ionId: ionIda});
+
+	console.log(matchedIonId);
+	
+
+	if(!matchedIonId) {
+
+		res.status(404).json({"error": "No ion found with this id"});
+
+	} else {
+
+		useThisArray = _.without(useThisArray, matchedIonId);
+		res.json(matchedIonId);
+
+	}
+
+
+});
 
 app.use(express.static(__dirname + '/public')) 
 
