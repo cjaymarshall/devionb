@@ -2,6 +2,7 @@ var PORT = process.env.PORT||3000;
 //set express variable to require the express module-instantiates an instance of express
 var express = require('express');
 var bodyParser = require('body-parser');
+var _ = require('underscore');
 var middleware = require('./middleware.js')
 // set app variable to the express function
 var app = express();
@@ -234,24 +235,8 @@ app.get('/useThisArray', function (req, res) {
 app.get('/useThisArray/:ionId', function (req, res) {
 	//res.json('Asking for ion with id of ' + req.params.ionId);
 
-	var ionIda = req.params.ionId;
-	var matchedIonId;
-
-	useThisArray.forEach(function (useThisArrayIon) {
-
-		console.log(useThisArrayIon.ionId);
-		console.log(useThisArrayIon.ionName);
-		console.log(ionIda);
-
-		if(parseInt(ionIda) === parseInt(useThisArrayIon.ionId)) {
-
-			matchedIonId = useThisArrayIon
-
-			console.log (matchedIonId)
-
-		};
-
-	});
+	var ionIda = parseInt(req.params.ionId, 10);
+	var matchedIonId = _.findWhere(useThisArray, {ionId: ionIda});
 
 	console.log(matchedIonId);
 	if (matchedIonId) {
@@ -268,10 +253,49 @@ app.get('/useThisArray/:ionId', function (req, res) {
 
 app.post('/useThisArray', function (req,res) {
 
-	var body = req.body;
+	var body = _.pick(req.body, 'ionId', 'ions', 'ionCharge', 'ionName', 'ionNameA', 'ionNameB', 'ionNameC', 'ionNameD', 'latin', 'explanation', 'ox', 'typeall', 'typemono', 'typea', 'typemustknowa', 'typemustknowb', 'isTransMetal');
+
+	 if 	(!_.isNumber(body.ionId) ||
+			!_.isString(body.ions) ||
+	 		body.ions.trim().length === 0 ||
+	 		!_.isString(body.ionCharge) ||
+			body.ionCharge.trim().length === 0 ||
+			!_.isString(body.ionName) ||
+			body.ionName.trim().length === 0 ||
+			!_.isString(body.ionNameA) ||
+			body.ionNameA.trim().length === 0 ||
+			!_.isString(body.ionNameB) ||
+			body.ionNameB.trim().length === 0 ||
+			!_.isString(body.ionNameC) ||
+			body.ionNameC.trim().length === 0 ||
+			!_.isString(body.ionNameD) ||
+			body.ionNameD.trim().length === 0 ||
+			//!_.isString(body.latin) ||
+			//body.latin.trim().length === 0 ||
+			!_.isNumber(body.explanation) ||
+			!_.isNumber(body.ox) ||
+			!_.isNumber(body.typeall) ||
+			!_.isNumber(body.typemono) ||
+			!_.isNumber(body.typea) ||
+			!_.isNumber(body.typemustknowa) ||
+	 		!_.isNumber(body.typemustknowb) ||
+	 		!_.isNumber(body.isTransMetal)
+	)  {
+
+	 		return res.status(400).send();
+	 }
 
 	console.log('Ion Name: ' + body.ionName);
 
+	body.ions = body.ions.trim();
+	body.ionCharge = body.ionCharge.trim();
+	body.ionName = body.ionName.trim();
+	body.ionNameA = body.ionName.trim();
+	body.ionNameB = body.ionName.trim();
+	body.ionNameC = body.ionName.trim();
+	body.ionNameD = body.ionName.trim();
+	body.latin = body.latin.trim();
+	
 	useThisArray.push(body);
 
 	res.json(body);
