@@ -1,11 +1,13 @@
 var PORT = process.env.PORT||3000;
 //set express variable to require the express module-instantiates an instance of express
 var express = require('express');
+var bodyParser = require('body-parser');
+var middleware = require('./middleware.js')
 // set app variable to the express function
 var app = express();
 var useThisArray = [
 	{
-	ionId: 1,
+	ionId: 0,
 	ions: "H",
 	ionCharge: "\u207A",
 	ionName: "Hydrogen",
@@ -24,7 +26,7 @@ var useThisArray = [
 	isTransMetal: 0
  	},
 	{
-	ionId: 2,
+	ionId: 1,
 	ions: "Li",
 	ionCharge: "\u207A",
 	ionName: "Lithium",
@@ -43,7 +45,7 @@ var useThisArray = [
 	isTransMetal: 0 
 	},
 	{
-	ionId: 3,
+	ionId: 2,
 	ions: "Na",
 	ionCharge: "\u207A",
 	ionName: "Sodium",
@@ -62,7 +64,7 @@ var useThisArray = [
 	isTransMetal: 0
 	},
 	{
-	ionId: 4,
+	ionId: 3,
 	ions: "K",
 	ionCharge: "\u207A",
 	ionName: "Potassium",
@@ -81,7 +83,7 @@ var useThisArray = [
 	isTransMetal: 0
 	},
 	{
-	ionId: 5,
+	ionId: 4,
 	ions: "Rb",
 	ionCharge: "\u207A",
 	ionName: "Rubidium",
@@ -100,7 +102,7 @@ var useThisArray = [
 	isTransMetal: 0
 	},
 	{
-	ionId: 6,
+	ionId: 5,
 	ions: "Cs",
 	ionCharge: "\u207A",
 	ionName: "Cesium",
@@ -119,7 +121,7 @@ var useThisArray = [
 	isTransMetal: 0
 	},
 	{
-	ionId: 7,
+	ionId: 6,
 	ions: "Mg",
 	ionCharge: "\u00B2\u207A",
 	ionName: "Magnesium",
@@ -138,7 +140,7 @@ var useThisArray = [
 	isTransMetal: 0
 	},
 	{
-	ionId: 8,
+	ionId: 7,
 	ions: "Ca",
 	ionCharge: "\u00B2\u207A",
 	ionName: "Calcium",
@@ -157,7 +159,7 @@ var useThisArray = [
 	isTransMetal: 0
 	},
 	{
-	ionId: 9,
+	ionId: 8,
 	ions: "Sr",
 	ionCharge: "\u00B2\u207A",
 	ionName: "Strontium",
@@ -176,7 +178,7 @@ var useThisArray = [
 	isTransMetal: 0
 	},
 	{
-	ionId: 10,
+	ionId: 9,
 	ions: "Ba",
 	ionCharge: "\u00B2\u207A",
 	ionName: "Barium",
@@ -195,7 +197,9 @@ var useThisArray = [
 	isTransMetal: 0
 	}
 ]
-var middleware = require('./middleware.js')
+
+
+app.use(bodyParser.json());
 
 //var http = require('http').Server(app);
 
@@ -211,12 +215,7 @@ var middleware = require('./middleware.js')
 //  	res.send('Hello Express');
 //  	});
 
-var middleware = {
-	logger: function(req, res, next) {
-		console.log('Request: ' + new Date().toString() + req.method + ' ' + req.originalUrl);			
-		next();
-		}	
-	};
+
 
 app.use(middleware.logger);
 app.get('/about', function (req,res) {
@@ -266,6 +265,20 @@ app.get('/useThisArray/:ionId', function (req, res) {
 	}
 
 });
+
+app.post('/useThisArray', function (req,res) {
+
+	var body = req.body;
+
+	console.log('Ion Name: ' + body.ionName)
+
+	res.json(body);
+
+
+
+});
+
+
 
 app.use(express.static(__dirname + '/public')) 
 
