@@ -270,7 +270,9 @@ app.post('/useThisArray', function (req,res) {
 
 	var body = req.body;
 
-	console.log('Ion Name: ' + body.ionName)
+	console.log('Ion Name: ' + body.ionName);
+
+	useThisArray.push(body);
 
 	res.json(body);
 
