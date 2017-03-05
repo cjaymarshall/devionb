@@ -231,7 +231,41 @@ app.get('/useThisArray', function (req, res) {
 	res.json(useThisArray);
 });
 
-// GT /useThisArray/:ionid
+// GET /useThisArray/:ionid
+app.get('/useThisArray/:ionId', function (req, res) {
+	//res.json('Asking for ion with id of ' + req.params.ionId);
+
+	var ionIda = req.params.ionId;
+	var matchedIonId;
+
+	useThisArray.forEach(function (useThisArrayIon) {
+
+		console.log(useThisArrayIon.ionId);
+		console.log(useThisArrayIon.ionName);
+		console.log(ionIda);
+
+		if(parseInt(ionIda) === parseInt(useThisArrayIon.ionId)) {
+
+			matchedIonId = useThisArrayIon
+
+			console.log (matchedIonId)
+
+		};
+
+	});
+
+	console.log(matchedIonId);
+	if (matchedIonId) {
+
+		res.json(matchedIonId);
+
+	} else {
+
+		res.status(404).send();
+
+	}
+
+});
 
 app.use(express.static(__dirname + '/public')) 
 
