@@ -249,6 +249,12 @@ app.get('/useThisArray', function (req, res) {
 		
 	}
 
+	if (queryParams.hasOwnProperty('q') && queryParams.q.length>0) {
+		filteredUseThisArray = _.filter(filteredUseThisArray, function (useThisArray) {
+			return useThisArray.ionName.indexOf(queryParams.q) > -1;
+		});
+	}
+
 	res.json(filteredUseThisArray);
 
 });
