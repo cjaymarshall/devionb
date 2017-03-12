@@ -231,10 +231,26 @@ app.get('/about', function (req,res) {
 
  });
 
-// GET /useThisArray--gets all ions
+// GET /useThisArray?ox=2
 
 app.get('/useThisArray', function (req, res) {
-	res.json(useThisArray);
+	var queryParams = req.query;
+	var filteredUseThisArray = useThisArray;
+
+	if (queryParams.hasOwnProperty('ox')) {
+
+		var val = parseInt(queryParams.ox,10);
+		console.log(val);
+		obj = new Object ();
+		obj.ox = val
+		console.log(obj)
+
+		filteredUseThisArray = _.where(filteredUseThisArray, obj)
+		
+	}
+
+	res.json(filteredUseThisArray);
+
 });
 
 // GET /useThisArray/:ionid--gets a specific ion
