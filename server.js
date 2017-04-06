@@ -237,28 +237,58 @@ app.get('/about', function (req,res) {
 // GET /useThisArray?ox=2
 
 app.get('/useThisArray', function (req, res) {
-	var queryParams = req.query;
-	var filteredUseThisArray = useThisArray;
 
-	if (queryParams.hasOwnProperty('ox')) {
+	var query = req.query;
+	var where = {};
 
-		var val = parseInt(queryParams.ox,10);
-		console.log(val);
-		obj = new Object ();
-		obj.ox = val
-		console.log(obj)
+	if (query.hasOwnProperty('ox')) {
 
-		filteredUseThisArray = _.where(filteredUseThisArray, obj)
+		var val = parseInt(query.ox,10);
+	 	console.log(val);
+	 	where.ox = val;
+	}
+
+	if (query.hasOwnProperty('q') && query.q.length >0) {
+
+		where.ions = {
+			$like: query.q + '%'
+		};
+
+	}
+
+	db.getIons.findAll({where: where}).then(function (foundIons) {
+
+		res.json(foundIons);
+
+	}, function(e) {
+		res.status(500).send();
+	});
+
+
+
+	//var queryParams = req.query;
+
+	// var filteredUseThisArray = useThisArray;
+
+	// if (queryParams.hasOwnProperty('ox')) {
+
+	// 	var val = parseInt(queryParams.ox,10);
+	// 	console.log(val);
+	// 	obj = new Object ();
+	// 	obj.ox = val
+	// 	console.log(obj)
+
+	// 	filteredUseThisArray = _.where(filteredUseThisArray, obj)
 		
-	}
+	// }
 
-	if (queryParams.hasOwnProperty('q') && queryParams.q.length>0) {
-		filteredUseThisArray = _.filter(filteredUseThisArray, function (useThisArray) {
-			return useThisArray.ionName.indexOf(queryParams.q) > -1;
-		});
-	}
+	// if (queryParams.hasOwnProperty('q') && queryParams.q.length>0) {
+	// 	filteredUseThisArray = _.filter(filteredUseThisArray, function (useThisArray) {
+	// 		return useThisArray.ionName.indexOf(queryParams.q) > -1;
+	// 	});
+	// }
 
-	res.json(filteredUseThisArray);
+	// res.json(filteredUseThisArray);
 
 });
 
