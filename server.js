@@ -268,18 +268,30 @@ app.get('/useThisArray/:ionId', function (req, res) {
 	//res.json('Asking for ion with id of ' + req.params.ionId);
 
 	var ionIda = parseInt(req.params.ionId, 10);
-	var matchedIonId = _.findWhere(useThisArray, {ionId: ionIda});
 
-	console.log(matchedIonId);
-	if (matchedIonId) {
+	db.getIons.findById(ionIda).then(function(foundIon) {
+		if(!!foundIon) {
+			res.json(foundIon.toJSON());
+		} else {
+			res.status(404).send();
+		}
+	}, function(e) {
+		res.status(500).send();
+	});
 
-		res.json(matchedIonId);
 
-	} else {
+	// var matchedIonId = _.findWhere(useThisArray, {ionId: ionIda});
 
-		res.status(404).send();
+	// console.log(matchedIonId);
+	// if (matchedIonId) {
 
-	}
+	// 	res.json(matchedIonId);
+
+	// } else {
+
+	// 	res.status(404).send();
+
+	// }
 
 });
 
