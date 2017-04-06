@@ -6,202 +6,205 @@ var bodyParser = require('body-parser');
 //set the underscore mark variable to require underscore-this module adds functionality that will help find and validata specific records
 var _ = require('underscore');
 //set the middleware variable to require the file 'middleware.js', a custom middleware script that adds a logger function to app
+var db = require('./db.js');
+
+
 var middleware = require('./middleware.js')
 // set app variable to the express function
 var app = express();
 //sample data to make sure everything is working before transferring to a db
-var useThisArray = [
-	{
-	ionId: 0,
-	ions: "H",
-	ionCharge: "\u207A",
-	ionName: "Hydrogen",
-	ionNameA: "Hydride",
-	ionNameB: "Hydrate",
-	ionNameC: "Monohydride",
-	ionNameD: "Hydrogen (I)",
-	latin: "",
-	explanation: 0,
-	ox: 1,
-	typeall: 1,
-	typemono: 1,
-	typea: 0,
-	typemustknowa: 1,
-	typemustknowb: 1,
-	isTransMetal: 0
- 	},
-	{
-	ionId: 1,
-	ions: "Li",
-	ionCharge: "\u207A",
-	ionName: "Lithium",
-	ionNameA: "Lithous",
-	ionNameB: "Lithate",
-	ionNameC: "Perlithate",
-	ionNameD: "Lithium (I)",
-	latin: "",
-	explanation: 0,
-	ox: 1,
-	typeall: 2,
-	typemono: 2,
-	typea: 0,
-	typemustknowa: 1,
-	typemustknowb: 1,
-	isTransMetal: 0 
-	},
-	{
-	ionId: 2,
-	ions: "Na",
-	ionCharge: "\u207A",
-	ionName: "Sodium",
-	ionNameA: "Sodide",
-	ionNameB: "Sodic",
-	ionNameC: "Sodium (I)",
-	ionNameD: "Monosodate",
-	latin: "",
-	explanation: 0,
-	ox: 1,
-	typeall: 1,
-	typemono: 1,
-	typea: 0,
-	typemustknowa: 1,
-	typemustknowb: 1,
-	isTransMetal: 0
-	},
-	{
-	ionId: 3,
-	ions: "K",
-	ionCharge: "\u207A",
-	ionName: "Potassium",
-	ionNameA: "Potassic",
-	ionNameB: "Monopotassium",
-	ionNameC: "Potassium (I)",
-	ionNameD: "Hypopotasside",
-	latin: "",
-	explanation: 0,
-	ox: 1,
-	typeall: 1,
-	typemono: 1,
-	typea: 0,
-	typemustknowa: 1,
-	typemustknowb: 1,
-	isTransMetal: 0
-	},
-	{
-	ionId: 4,
-	ions: "Rb",
-	ionCharge: "\u207A",
-	ionName: "Rubidium",
-	ionNameA: "Rubidiate",
-	ionNameB: "Rubidium (I)",
-	ionNameC: "Rubidiide",
-	ionNameD: "Rubidic",
-	latin: "",
-	explanation: 0,
-	ox: 1,
-	typeall: 1,
-	typemono: 1,
-	typea: 0,
-	typemustknowa: 1,
-	typemustknowb: 1,
-	isTransMetal: 0
-	},
-	{
-	ionId: 5,
-	ions: "Cs",
-	ionCharge: "\u207A",
-	ionName: "Cesium",
-	ionNameA: "Cesiide",
-	ionNameB: "Cesious",
-	ionNameC: "Cesium (I)",
-	ionNameD: "Cesiate",
-	latin: "",
-	explanation: 0,
-	ox: 1,
-	typeall: 1,
-	typemono: 1,
-	typea: 0,
-	typemustknowa: 1,
-	typemustknowb: 1,
-	isTransMetal: 0
-	},
-	{
-	ionId: 6,
-	ions: "Mg",
-	ionCharge: "\u00B2\u207A",
-	ionName: "Magnesium",
-	ionNameA: "Magneside",
-	ionNameB: "Permagnesidate",
-	ionNameC: "Magnesium (II)",
-	ionNameD: "Magnesic",
-	latin: "",
-	explanation: 0,
-	ox: 2,
-	typeall: 1,
-	typemono: 1,
-	typea: 0,
-	typemustknowa: 1,
-	typemustknowb: 1,
-	isTransMetal: 0
-	},
-	{
-	ionId: 7,
-	ions: "Ca",
-	ionCharge: "\u00B2\u207A",
-	ionName: "Calcium",
-	ionNameA: "Calcite",
-	ionNameB: "Monocalcium",
-	ionNameC: "Calcium (II)",
-	ionNameD: "Calcious",
-	latin: "",
-	explanation: 0,
-	ox: 2,
-	typeall: 1,
-	typemono: 1,
-	typea: 0,
-	typemustknowa: 1,
-	typemustknowb: 1,
-	isTransMetal: 0
-	},
-	{
-	ionId: 8,
-	ions: "Sr",
-	ionCharge: "\u00B2\u207A",
-	ionName: "Strontium",
-	ionNameA: "Strontious",
-	ionNameB: "Monostrontium",
-	ionNameC: "Strontium (II)",
-	ionNameD: "Strontide",
-	latin: "",
-	explanation: 0,
-	ox: 2,
-	typeall: 1,
-	typemono: 1,
-	typea: 0,
-	typemustknowa: 1,
-	typemustknowb: 1,
-	isTransMetal: 0
-	},
-	{
-	ionId: 9,
-	ions: "Ba",
-	ionCharge: "\u00B2\u207A",
-	ionName: "Barium",
-	ionNameA: "Baride",
-	ionNameB: "Baric",
-	ionNameC: "Barium (II)",
-	ionNameD: "Hypobarite",
-	latin: "",
-	explanation: 0,
-	ox: 2,
-	typeall: 1,
-	typemono: 1,
-	typea: 0,
-	typemustknowa: 1,
-	typemustknowb: 1,
-	isTransMetal: 0
-	}
-]
+// var useThisArray = [
+// 	{
+// 	ionId: 0,
+// 	ions: "H",
+// 	ionCharge: "\u207A",
+// 	ionName: "Hydrogen",
+// 	ionNameA: "Hydride",
+// 	ionNameB: "Hydrate",
+// 	ionNameC: "Monohydride",
+// 	ionNameD: "Hydrogen (I)",
+// 	latin: "",
+// 	explanation: 0,
+// 	ox: 1,
+// 	typeall: 1,
+// 	typemono: 1,
+// 	typepa: 0,
+// 	typemustknowa: 1,
+// 	typemustknowb: 1,
+// 	isTransMetal: 0
+//  	},
+// 	{
+// 	ionId: 1,
+// 	ions: "Li",
+// 	ionCharge: "\u207A",
+// 	ionName: "Lithium",
+// 	ionNameA: "Lithous",
+// 	ionNameB: "Lithate",
+// 	ionNameC: "Perlithate",
+// 	ionNameD: "Lithium (I)",
+// 	latin: "",
+// 	explanation: 0,
+// 	ox: 1,
+// 	typeall: 2,
+// 	typemono: 2,
+// 	typepa: 0,
+// 	typemustknowa: 1,
+// 	typemustknowb: 1,
+// 	isTransMetal: 0 
+// 	},
+// 	{
+// 	ionId: 2,
+// 	ions: "Na",
+// 	ionCharge: "\u207A",
+// 	ionName: "Sodium",
+// 	ionNameA: "Sodide",
+// 	ionNameB: "Sodic",
+// 	ionNameC: "Sodium (I)",
+// 	ionNameD: "Monosodate",
+// 	latin: "",
+// 	explanation: 0,
+// 	ox: 1,
+// 	typeall: 1,
+// 	typemono: 1,
+// 	typepa: 0,
+// 	typemustknowa: 1,
+// 	typemustknowb: 1,
+// 	isTransMetal: 0
+// 	},
+// 	{
+// 	ionId: 3,
+// 	ions: "K",
+// 	ionCharge: "\u207A",
+// 	ionName: "Potassium",
+// 	ionNameA: "Potassic",
+// 	ionNameB: "Monopotassium",
+// 	ionNameC: "Potassium (I)",
+// 	ionNameD: "Hypopotasside",
+// 	latin: "",
+// 	explanation: 0,
+// 	ox: 1,
+// 	typeall: 1,
+// 	typemono: 1,
+// 	typepa: 0,
+// 	typemustknowa: 1,
+// 	typemustknowb: 1,
+// 	isTransMetal: 0
+// 	},
+// 	{
+// 	ionId: 4,
+// 	ions: "Rb",
+// 	ionCharge: "\u207A",
+// 	ionName: "Rubidium",
+// 	ionNameA: "Rubidiate",
+// 	ionNameB: "Rubidium (I)",
+// 	ionNameC: "Rubidiide",
+// 	ionNameD: "Rubidic",
+// 	latin: "",
+// 	explanation: 0,
+// 	ox: 1,
+// 	typeall: 1,
+// 	typemono: 1,
+// 	typepa: 0,
+// 	typemustknowa: 1,
+// 	typemustknowb: 1,
+// 	isTransMetal: 0
+// 	},
+// 	{
+// 	ionId: 5,
+// 	ions: "Cs",
+// 	ionCharge: "\u207A",
+// 	ionName: "Cesium",
+// 	ionNameA: "Cesiide",
+// 	ionNameB: "Cesious",
+// 	ionNameC: "Cesium (I)",
+// 	ionNameD: "Cesiate",
+// 	latin: "",
+// 	explanation: 0,
+// 	ox: 1,
+// 	typeall: 1,
+// 	typemono: 1,
+// 	typepa: 0,
+// 	typemustknowa: 1,
+// 	typemustknowb: 1,
+// 	isTransMetal: 0
+// 	},
+// 	{
+// 	ionId: 6,
+// 	ions: "Mg",
+// 	ionCharge: "\u00B2\u207A",
+// 	ionName: "Magnesium",
+// 	ionNameA: "Magneside",
+// 	ionNameB: "Permagnesidate",
+// 	ionNameC: "Magnesium (II)",
+// 	ionNameD: "Magnesic",
+// 	latin: "",
+// 	explanation: 0,
+// 	ox: 2,
+// 	typeall: 1,
+// 	typemono: 1,
+// 	typepa: 0,
+// 	typemustknowa: 1,
+// 	typemustknowb: 1,
+// 	isTransMetal: 0
+// 	},
+// 	{
+// 	ionId: 7,
+// 	ions: "Ca",
+// 	ionCharge: "\u00B2\u207A",
+// 	ionName: "Calcium",
+// 	ionNameA: "Calcite",
+// 	ionNameB: "Monocalcium",
+// 	ionNameC: "Calcium (II)",
+// 	ionNameD: "Calcious",
+// 	latin: "",
+// 	explanation: 0,
+// 	ox: 2,
+// 	typeall: 1,
+// 	typemono: 1,
+// 	typepa: 0,
+// 	typemustknowa: 1,
+// 	typemustknowb: 1,
+// 	isTransMetal: 0
+// 	},
+// 	{
+// 	ionId: 8,
+// 	ions: "Sr",
+// 	ionCharge: "\u00B2\u207A",
+// 	ionName: "Strontium",
+// 	ionNameA: "Strontious",
+// 	ionNameB: "Monostrontium",
+// 	ionNameC: "Strontium (II)",
+// 	ionNameD: "Strontide",
+// 	latin: "",
+// 	explanation: 0,
+// 	ox: 2,
+// 	typeall: 1,
+// 	typemono: 1,
+// 	typepa: 0,
+// 	typemustknowa: 1,
+// 	typemustknowb: 1,
+// 	isTransMetal: 0
+// 	},
+// 	{
+// 	ionId: 9,
+// 	ions: "Ba",
+// 	ionCharge: "\u00B2\u207A",
+// 	ionName: "Barium",
+// 	ionNameA: "Baride",
+// 	ionNameB: "Baric",
+// 	ionNameC: "Barium (II)",
+// 	ionNameD: "Hypobarite",
+// 	latin: "",
+// 	explanation: 0,
+// 	ox: 2,
+// 	typeall: 1,
+// 	typemono: 1,
+// 	typepa: 0,
+// 	typemustknowa: 1,
+// 	typemustknowb: 1,
+// 	isTransMetal: 0
+// 	}
+// ]
 
 
 app.use(bodyParser.json());
@@ -282,54 +285,60 @@ app.get('/useThisArray/:ionId', function (req, res) {
 
 app.post('/useThisArray', function (req,res) {
 
-	var body = _.pick(req.body, 'ionId', 'ions', 'ionCharge', 'ionName', 'ionNameA', 'ionNameB', 'ionNameC', 'ionNameD', 'latin', 'explanation', 'ox', 'typeall', 'typemono', 'typea', 'typemustknowa', 'typemustknowb', 'isTransMetal');
+	var body = _.pick(req.body, 'ionId', 'ions', 'ionCharge', 'ionName', 'ionNameA', 'ionNameB', 'ionNameC', 'ionNameD', 'latin', 'explanation', 'ox', 'typeall', 'typemono', 'typepa', 'typemustknowa', 'typemustknowb', 'isTransMetal');
 
-	 if 	(!_.isNumber(body.ionId) ||				//makes certain all fields contain the right info
-			!_.isString(body.ions) ||
-	 		body.ions.trim().length === 0 ||
-	 		!_.isString(body.ionCharge) ||
-			body.ionCharge.trim().length === 0 ||
-			!_.isString(body.ionName) ||
-			body.ionName.trim().length === 0 ||
-			!_.isString(body.ionNameA) ||
-			body.ionNameA.trim().length === 0 ||
-			!_.isString(body.ionNameB) ||
-			body.ionNameB.trim().length === 0 ||
-			!_.isString(body.ionNameC) ||
-			body.ionNameC.trim().length === 0 ||
-			!_.isString(body.ionNameD) ||
-			body.ionNameD.trim().length === 0 ||
-			//!_.isString(body.latin) ||
-			//body.latin.trim().length === 0 ||
-			!_.isNumber(body.explanation) ||
-			!_.isNumber(body.ox) ||
-			!_.isNumber(body.typeall) ||
-			!_.isNumber(body.typemono) ||
-			!_.isNumber(body.typea) ||
-			!_.isNumber(body.typemustknowa) ||
-	 		!_.isNumber(body.typemustknowb) ||
-	 		!_.isNumber(body.isTransMetal)
-	)  
+	db.getIons.create(body).then(function(addedIon) {
+		res.json(addedIon.toJSON());
+	},function(e) {
+		res.status(400).json(e);
+	});
 
-	 {
+	//  if 	(!_.isNumber(body.ionId) ||				//makes certain all fields contain the right info
+	// 		!_.isString(body.ions) ||
+	//  		body.ions.trim().length === 0 ||
+	//  		!_.isString(body.ionCharge) ||
+	// 		body.ionCharge.trim().length === 0 ||
+	// 		!_.isString(body.ionName) ||
+	// 		body.ionName.trim().length === 0 ||
+	// 		!_.isString(body.ionNameA) ||
+	// 		body.ionNameA.trim().length === 0 ||
+	// 		!_.isString(body.ionNameB) ||
+	// 		body.ionNameB.trim().length === 0 ||
+	// 		!_.isString(body.ionNameC) ||
+	// 		body.ionNameC.trim().length === 0 ||
+	// 		!_.isString(body.ionNameD) ||
+	// 		body.ionNameD.trim().length === 0 ||
+	// 		//!_.isString(body.latin) ||
+	// 		//body.latin.trim().length === 0 ||
+	// 		!_.isNumber(body.explanation) ||
+	// 		!_.isNumber(body.ox) ||
+	// 		!_.isNumber(body.typeall) ||
+	// 		!_.isNumber(body.typemono) ||
+	// 		!_.isNumber(body.typea) ||
+	// 		!_.isNumber(body.typemustknowa) ||
+	//  		!_.isNumber(body.typemustknowb) ||
+	//  		!_.isNumber(body.isTransMetal)
+	// )  
 
-	 		return res.status(400).send();
-	 }
+	//  {
 
-	console.log('Ion Name: ' + body.ionName);
+	//  		return res.status(400).send();
+	//  }
 
-	body.ions = body.ions.trim();				//makes sure only 'trimmed' values are placed in array
-	body.ionCharge = body.ionCharge.trim();
-	body.ionName = body.ionName.trim();
-	body.ionNameA = body.ionNameA.trim();
-	body.ionNameB = body.ionNameB.trim();
-	body.ionNameC = body.ionNameC.trim();
-	body.ionNameD = body.ionNameD.trim();
-	body.latin = body.latin.trim();
+	// console.log('Ion Name: ' + body.ionName);
+
+	// body.ions = body.ions.trim();				//makes sure only 'trimmed' values are placed in array
+	// body.ionCharge = body.ionCharge.trim();
+	// body.ionName = body.ionName.trim();
+	// body.ionNameA = body.ionNameA.trim();
+	// body.ionNameB = body.ionNameB.trim();
+	// body.ionNameC = body.ionNameC.trim();
+	// body.ionNameD = body.ionNameD.trim();
+	// body.latin = body.latin.trim();
 	
-	useThisArray.push(body);
+	// useThisArray.push(body);
 
-	res.json(body);
+	// res.json(body);
 
 
 
@@ -422,7 +431,7 @@ app.put('/useThisArray/:ionId', function (req,res) {
 	}
 
 	if (body.hasOwnProperty('latin') && _.isString(body.latin) && body.latin.trim().length >0) {
-		validAttributes.ionName = body.ionName
+		validAttributes.latin = body.latin
 	} else {
 		validAttributes.latin = null
 	}
@@ -474,13 +483,22 @@ app.put('/useThisArray/:ionId', function (req,res) {
 
 });
 
-app.use(express.static(__dirname + '/public')) 
 
-app.listen(PORT, function() {
+db.sequelize.sync({
+ 	force: false
+ 	}).then(function () {
+
+	app.listen(PORT, function() {
 
 	console.log("Server Started on port " + PORT  + "!");
 
+	});
+
 });
+
+app.use(express.static(__dirname + '/public')) 
+
+
 
 
 
