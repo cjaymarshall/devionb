@@ -284,25 +284,25 @@ app.put('/useThisArray/:ionId', function (req,res) {
 	if (body.hasOwnProperty('ionId')) {
 			attributes.ionId = body.ionId
 		}
-	if (body.hasOwnProperty('ions') {
+	if (body.hasOwnProperty('ions')) {
 			attributes.ions = body.ions
 	}	
-	if (body.hasOwnProperty('ionCharge') {
+	if (body.hasOwnProperty('ionCharge')) {
 			attributes.ionCharge = body.ionCharge
 	} 
-	if (body.hasOwnProperty('ionName') 
+	if (body.hasOwnProperty('ionName')) {
 			attributes.ionName = body.ionName
 	}
-	if (body.hasOwnProperty('ionNameA') {
+	if (body.hasOwnProperty('ionNameA')) {
 			attributes.ionNameA = body.ionNameA
 	} 
-	if (body.hasOwnProperty('ionNameB') {
+	if (body.hasOwnProperty('ionNameB')) {
 			attributes.ionNameB = body.ionNameB
 	} 
-	if (body.hasOwnProperty('ionNameC') {
+	if (body.hasOwnProperty('ionNameC')) {
 			attributes.ionNameC = body.ionNameC
 	} 
-	if (body.hasOwnProperty('ionNameD') {
+	if (body.hasOwnProperty('ionNameD')) {
 			attributes.ionNameD = body.ionNameD
 	} 
 
@@ -415,8 +415,7 @@ app.put('/useThisArray/:ionId', function (req,res) {
 		return res.status(400).json({"error": "Problem with isTransMetal field"});
 	}
 
-	_.extend(matchedIonId, validAttributes);
-	res.json(matchedIonId);
+	
 
 
 });
