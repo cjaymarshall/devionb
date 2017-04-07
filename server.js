@@ -407,6 +407,27 @@ app.delete('/useThisArray/:ionId', function (req, res) {
 		res.status(500).send();
 	});
 
+	// app.delete('/useThisArray/:ionName', function (req, res) {
+	// //res.json('Asking for ion with id of ' + req.params.ionId);
+
+	// var ionNameA = req.params.ionName;
+
+	// db.getIons.destroy({
+	// 	where: {
+	// 		ionName: ionNameA
+	// 	}
+	// }).then(function (recordsDeleted) {
+	// 	if (recordsDeleted ===0) {
+	// 		res.status(404).json({
+	// 			error: 'No ion with name'
+	// 		});
+	// 	} else {
+	// 		res.status(204).send();
+	// 	}
+	// }, function () {
+	// 	res.status(500).send();
+	// });
+
 	//makes sure ionId is seen as an integer
 	// var matchedIonId = _.findWhere(useThisArray, {ionId: ionIda});  //surfs the array finding the record in which the ionId equals the searched for value
 
