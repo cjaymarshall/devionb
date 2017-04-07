@@ -389,22 +389,40 @@ app.post('/useThisArray', function (req,res) {
 app.delete('/useThisArray/:ionId', function (req, res) {
 	//res.json('Asking for ion with id of ' + req.params.ionId);
 
-	var ionIda = parseInt(req.params.ionId, 10);					//makes sure ionId is seen as an integer
-	var matchedIonId = _.findWhere(useThisArray, {ionId: ionIda});  //surfs the array finding the record in which the ionId equals the searched for value
+	var ionIda = parseInt(req.params.ionId, 10);
 
-	console.log(matchedIonId);
+	db.getIons.destroy({
+		where: {
+			ionId: ionIda
+		}
+	}).then(function (recordsDeleted) {
+		if (recordsDeleted ===0) {
+			res.status(404).json({
+				error: 'No ion with id'
+			});
+		} else {
+			res.status(204).send();
+		}
+	}, function () {
+		res.status(500).send();
+	});
+
+	//makes sure ionId is seen as an integer
+	// var matchedIonId = _.findWhere(useThisArray, {ionId: ionIda});  //surfs the array finding the record in which the ionId equals the searched for value
+
+	// console.log(matchedIonId);
 	
 
-	if(!matchedIonId) {
+	// if(!matchedIonId) {
 
-		res.status(404).json({"error": "No ion found with this id"});
+	// 	res.status(404).json({"error": "No ion found with this id"});
 
-	} else {
+	// } else {
 
-		useThisArray = _.without(useThisArray, matchedIonId);
-		res.json(matchedIonId);
+	// 	useThisArray = _.without(useThisArray, matchedIonId);
+	// 	res.json(matchedIonId);
 
-	}
+	// }
 
 });
 
