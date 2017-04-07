@@ -335,16 +335,16 @@ app.put('/useThisArray/:id', function (req,res) {
 
 	db.getIons.findById(ionIda).then(function (foundIon) {
 		if (foundIon) {
-			return foundIon.update(attributes);
+			foundIon.update(attributes).then(function (foundIon) {
+				res.json(foundIon.toJSON());
+			}, function (e) {
+				res.status(400).json(e);
+			});
 		} else {
 			res.status(404).send();
 			}
 		}, function () {
 			res.status(500).send();
-	}).then(function (foundIon) {
-		res.json(foundIon.toJSON());
-	}, function (e) {
-		res.status(400).json(e);
 	});
 
 					//makes sure ionId is seen as an integer
