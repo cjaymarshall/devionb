@@ -472,9 +472,11 @@ db.sequelize.sync({
 
 	});
 
-});
+	app.use(express.static(__dirname + '/public')); 
 
-app.use(express.static(__dirname + '/public')) 
+
+
+});
 
 
 
