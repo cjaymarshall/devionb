@@ -5,207 +5,14 @@ var express = require('express');
 var bodyParser = require('body-parser');
 //set the underscore mark variable to require underscore-this module adds functionality that will help find and validata specific records
 var _ = require('underscore');
-//set the middleware variable to require the file 'middleware.js', a custom middleware script that adds a logger function to app
+
 var db = require('./db.js');
 
+//set the middleware variable to require the file 'middleware.js', a custom middleware script that adds a logger function to app
 
 var middleware = require('./middleware.js')
 // set app variable to the express function
 var app = express();
-//sample data to make sure everything is working before transferring to a db
-// var useThisArray = [
-// 	{
-// 	ionId: 0,
-// 	ions: "H",
-// 	ionCharge: "\u207A",
-// 	ionName: "Hydrogen",
-// 	ionNameA: "Hydride",
-// 	ionNameB: "Hydrate",
-// 	ionNameC: "Monohydride",
-// 	ionNameD: "Hydrogen (I)",
-// 	latin: "",
-// 	explanation: 0,
-// 	ox: 1,
-// 	typeall: 1,
-// 	typemono: 1,
-// 	typepa: 0,
-// 	typemustknowa: 1,
-// 	typemustknowb: 1,
-// 	isTransMetal: 0
-//  	},
-// 	{
-// 	ionId: 1,
-// 	ions: "Li",
-// 	ionCharge: "\u207A",
-// 	ionName: "Lithium",
-// 	ionNameA: "Lithous",
-// 	ionNameB: "Lithate",
-// 	ionNameC: "Perlithate",
-// 	ionNameD: "Lithium (I)",
-// 	latin: "",
-// 	explanation: 0,
-// 	ox: 1,
-// 	typeall: 2,
-// 	typemono: 2,
-// 	typepa: 0,
-// 	typemustknowa: 1,
-// 	typemustknowb: 1,
-// 	isTransMetal: 0 
-// 	},
-// 	{
-// 	ionId: 2,
-// 	ions: "Na",
-// 	ionCharge: "\u207A",
-// 	ionName: "Sodium",
-// 	ionNameA: "Sodide",
-// 	ionNameB: "Sodic",
-// 	ionNameC: "Sodium (I)",
-// 	ionNameD: "Monosodate",
-// 	latin: "",
-// 	explanation: 0,
-// 	ox: 1,
-// 	typeall: 1,
-// 	typemono: 1,
-// 	typepa: 0,
-// 	typemustknowa: 1,
-// 	typemustknowb: 1,
-// 	isTransMetal: 0
-// 	},
-// 	{
-// 	ionId: 3,
-// 	ions: "K",
-// 	ionCharge: "\u207A",
-// 	ionName: "Potassium",
-// 	ionNameA: "Potassic",
-// 	ionNameB: "Monopotassium",
-// 	ionNameC: "Potassium (I)",
-// 	ionNameD: "Hypopotasside",
-// 	latin: "",
-// 	explanation: 0,
-// 	ox: 1,
-// 	typeall: 1,
-// 	typemono: 1,
-// 	typepa: 0,
-// 	typemustknowa: 1,
-// 	typemustknowb: 1,
-// 	isTransMetal: 0
-// 	},
-// 	{
-// 	ionId: 4,
-// 	ions: "Rb",
-// 	ionCharge: "\u207A",
-// 	ionName: "Rubidium",
-// 	ionNameA: "Rubidiate",
-// 	ionNameB: "Rubidium (I)",
-// 	ionNameC: "Rubidiide",
-// 	ionNameD: "Rubidic",
-// 	latin: "",
-// 	explanation: 0,
-// 	ox: 1,
-// 	typeall: 1,
-// 	typemono: 1,
-// 	typepa: 0,
-// 	typemustknowa: 1,
-// 	typemustknowb: 1,
-// 	isTransMetal: 0
-// 	},
-// 	{
-// 	ionId: 5,
-// 	ions: "Cs",
-// 	ionCharge: "\u207A",
-// 	ionName: "Cesium",
-// 	ionNameA: "Cesiide",
-// 	ionNameB: "Cesious",
-// 	ionNameC: "Cesium (I)",
-// 	ionNameD: "Cesiate",
-// 	latin: "",
-// 	explanation: 0,
-// 	ox: 1,
-// 	typeall: 1,
-// 	typemono: 1,
-// 	typepa: 0,
-// 	typemustknowa: 1,
-// 	typemustknowb: 1,
-// 	isTransMetal: 0
-// 	},
-// 	{
-// 	ionId: 6,
-// 	ions: "Mg",
-// 	ionCharge: "\u00B2\u207A",
-// 	ionName: "Magnesium",
-// 	ionNameA: "Magneside",
-// 	ionNameB: "Permagnesidate",
-// 	ionNameC: "Magnesium (II)",
-// 	ionNameD: "Magnesic",
-// 	latin: "",
-// 	explanation: 0,
-// 	ox: 2,
-// 	typeall: 1,
-// 	typemono: 1,
-// 	typepa: 0,
-// 	typemustknowa: 1,
-// 	typemustknowb: 1,
-// 	isTransMetal: 0
-// 	},
-// 	{
-// 	ionId: 7,
-// 	ions: "Ca",
-// 	ionCharge: "\u00B2\u207A",
-// 	ionName: "Calcium",
-// 	ionNameA: "Calcite",
-// 	ionNameB: "Monocalcium",
-// 	ionNameC: "Calcium (II)",
-// 	ionNameD: "Calcious",
-// 	latin: "",
-// 	explanation: 0,
-// 	ox: 2,
-// 	typeall: 1,
-// 	typemono: 1,
-// 	typepa: 0,
-// 	typemustknowa: 1,
-// 	typemustknowb: 1,
-// 	isTransMetal: 0
-// 	},
-// 	{
-// 	ionId: 8,
-// 	ions: "Sr",
-// 	ionCharge: "\u00B2\u207A",
-// 	ionName: "Strontium",
-// 	ionNameA: "Strontious",
-// 	ionNameB: "Monostrontium",
-// 	ionNameC: "Strontium (II)",
-// 	ionNameD: "Strontide",
-// 	latin: "",
-// 	explanation: 0,
-// 	ox: 2,
-// 	typeall: 1,
-// 	typemono: 1,
-// 	typepa: 0,
-// 	typemustknowa: 1,
-// 	typemustknowb: 1,
-// 	isTransMetal: 0
-// 	},
-// 	{
-// 	ionId: 9,
-// 	ions: "Ba",
-// 	ionCharge: "\u00B2\u207A",
-// 	ionName: "Barium",
-// 	ionNameA: "Baride",
-// 	ionNameB: "Baric",
-// 	ionNameC: "Barium (II)",
-// 	ionNameD: "Hypobarite",
-// 	latin: "",
-// 	explanation: 0,
-// 	ox: 2,
-// 	typeall: 1,
-// 	typemono: 1,
-// 	typepa: 0,
-// 	typemustknowa: 1,
-// 	typemustknowb: 1,
-// 	isTransMetal: 0
-// 	}
-// ]
-
 
 app.use(bodyParser.json());
 
@@ -470,67 +277,96 @@ app.delete('/useThisArray/:id', function (req, res) {
 
 app.put('/useThisArray/:ionId', function (req,res) {
 
-	var ionIda = parseInt(req.params.ionId, 10);					//makes sure ionId is seen as an integer
-	var matchedIonId = _.findWhere(useThisArray, {ionId: ionIda});  //surfs the array finding the record in which the ionId equals the searched for value
-
-	console.log(matchedIonId);
-
-	if(!matchedIonId) {													//if no matched id, sends back an error message
-
-		return res.status(404).json({"error": "No ion found with this id"});  //using return stops action
-
-	} 
-	//create var that will hold 'picked' key:value pairs-pick used to prevent bad data from being added
+	var ionIda = parseInt(req.params.ionId, 10);	
 	var body = _.pick(req.body, 'ionId', 'ions', 'ionCharge', 'ionName', 'ionNameA', 'ionNameB', 'ionNameC', 'ionNameD', 'latin', 'explanation', 'ox', 'typeall', 'typemono', 'typea', 'typemustknowa', 'typemustknowb', 'isTransMetal');
+	var attributes = {};
+
+	if (body.hasOwnProperty('ionId')) {
+			attributes.ionId = body.ionId
+		}
+	if (body.hasOwnProperty('ions') {
+			attributes.ions = body.ions
+	}	
+	if (body.hasOwnProperty('ionCharge') {
+			attributes.ionCharge = body.ionCharge
+	} 
+	if (body.hasOwnProperty('ionName') 
+			attributes.ionName = body.ionName
+	}
+	if (body.hasOwnProperty('ionNameA') {
+			attributes.ionNameA = body.ionNameA
+	} 
+	if (body.hasOwnProperty('ionNameB') {
+			attributes.ionNameB = body.ionNameB
+	} 
+	if (body.hasOwnProperty('ionNameC') {
+			attributes.ionNameC = body.ionNameC
+	} 
+	if (body.hasOwnProperty('ionNameD') {
+			attributes.ionNameD = body.ionNameD
+	} 
+
+					//makes sure ionId is seen as an integer
+	// var matchedIonId = _.findWhere(useThisArray, {ionId: ionIda});  //surfs the array finding the record in which the ionId equals the searched for value
+
+	// console.log(matchedIonId);
+
+	// if(!matchedIonId) {													//if no matched id, sends back an error message
+
+	// 	return res.status(404).json({"error": "No ion found with this id"});  //using return stops action
+
+	// } 
+	//create var that will hold 'picked' key:value pairs-pick used to prevent bad data from being added
+	// var body = _.pick(req.body, 'ionId', 'ions', 'ionCharge', 'ionName', 'ionNameA', 'ionNameB', 'ionNameC', 'ionNameD', 'latin', 'explanation', 'ox', 'typeall', 'typemono', 'typea', 'typemustknowa', 'typemustknowb', 'isTransMetal');
 	//create var that will hold final values to be updated
-	var validAttributes = {};
+	// var validAttributes = {};
 
 	//validate selected fields using 'has own property' in combo with 'isString', return an error if there is a problem
-	if (body.hasOwnProperty('ionId') && _.isNumber(body.ionId)) {
-		validAttributes.ionId = body.ionId
-	} else if (body.hasOwnProperty('ionId')) {
-		return res.status(400).json({"error": "Problem with ionId field"});
-	}
+	// if (body.hasOwnProperty('ionId') && _.isNumber(body.ionId)) {
+	// 	validAttributes.ionId = body.ionId
+	// } else if (body.hasOwnProperty('ionId')) {
+	// 	return res.status(400).json({"error": "Problem with ionId field"});
+	// }
 
-	if (body.hasOwnProperty('ions') && _.isString(body.ions) && body.ions.trim().length >0) {
-		validAttributes.ions = body.ions
-	} else if (body.hasOwnProperty('ions')) {
-		return res.status(400).json({"error": "Problem with ions field"});
-	}
+	// if (body.hasOwnProperty('ions') && _.isString(body.ions) && body.ions.trim().length >0) {
+	// 	validAttributes.ions = body.ions
+	// } else if (body.hasOwnProperty('ions')) {
+	// 	return res.status(400).json({"error": "Problem with ions field"});
+	// }
 
-	if (body.hasOwnProperty('ionCharge') && _.isString(body.ionCharge) && body.ionCharge.trim().length >0) {
-		validAttributes.ionCharge = body.ionCharge
-	} else if (body.hasOwnProperty('ionCharge')) {
-		return res.status(400).json({"error": "Problem with ionCharge field"});
-	}
+	// if (body.hasOwnProperty('ionCharge') && _.isString(body.ionCharge) && body.ionCharge.trim().length >0) {
+	// 	validAttributes.ionCharge = body.ionCharge
+	// } else if (body.hasOwnProperty('ionCharge')) {
+	// 	return res.status(400).json({"error": "Problem with ionCharge field"});
+	// }
 
-	if (body.hasOwnProperty('ionName') && _.isString(body.ionName) && body.ionName.trim().length >0) {
-		validAttributes.ionName = body.ionName
-	} else if (body.hasOwnProperty('ionName')) {
-		return res.status(400).json({"error": "Problem with ionName field"});
-	}
+	// if (body.hasOwnProperty('ionName') && _.isString(body.ionName) && body.ionName.trim().length >0) {
+	// 	validAttributes.ionName = body.ionName
+	// } else if (body.hasOwnProperty('ionName')) {
+	// 	return res.status(400).json({"error": "Problem with ionName field"});
+	// }
 
-	if (body.hasOwnProperty('ionNameA') && _.isString(body.ionNameA) && body.ionNameA.trim().length >0) {
-		validAttributes.ionNameA = body.ionNameA
-	} else if (body.hasOwnProperty('ionNameA')) {
-		return res.status(400).json({"error": "Problem with ionNameA field"});
-	}
-	if (body.hasOwnProperty('ionNameB') && _.isString(body.ionNameB) && body.ionNameB.trim().length >0) {
-		validAttributes.ionNameB = body.ionNameB
-	} else if (body.hasOwnProperty('ionNameB')) {
-		return res.status(400).json({"error": "Problem with ionNameA field"});
-	}
-	if (body.hasOwnProperty('ionNameC') && _.isString(body.ionNameC) && body.ionNameC.trim().length >0) {
-		validAttributes.ionNameC = body.ionNameC
-	} else if (body.hasOwnProperty('ionNameC')) {
-		return res.status(400).json({"error": "Problem with ionNameB field"});
-	}
+	// if (body.hasOwnProperty('ionNameA') && _.isString(body.ionNameA) && body.ionNameA.trim().length >0) {
+	// 	validAttributes.ionNameA = body.ionNameA
+	// } else if (body.hasOwnProperty('ionNameA')) {
+	// 	return res.status(400).json({"error": "Problem with ionNameA field"});
+	// }
+	// if (body.hasOwnProperty('ionNameB') && _.isString(body.ionNameB) && body.ionNameB.trim().length >0) {
+	// 	validAttributes.ionNameB = body.ionNameB
+	// } else if (body.hasOwnProperty('ionNameB')) {
+	// 	return res.status(400).json({"error": "Problem with ionNameA field"});
+	// }
+	// if (body.hasOwnProperty('ionNameC') && _.isString(body.ionNameC) && body.ionNameC.trim().length >0) {
+	// 	validAttributes.ionNameC = body.ionNameC
+	// } else if (body.hasOwnProperty('ionNameC')) {
+	// 	return res.status(400).json({"error": "Problem with ionNameB field"});
+	// }
 
-	if (body.hasOwnProperty('ionNameD') && _.isString(body.ionNameD) && body.ionNameD.trim().length >0) {
-		validAttributes.ionNameD = body.ionNameD
-	} else if (body.hasOwnProperty('ionNameD')) {
-		return res.status(400).json({"error": "Problem with ionNameC field"});
-	}
+	// if (body.hasOwnProperty('ionNameD') && _.isString(body.ionNameD) && body.ionNameD.trim().length >0) {
+	// 	validAttributes.ionNameD = body.ionNameD
+	// } else if (body.hasOwnProperty('ionNameD')) {
+	// 	return res.status(400).json({"error": "Problem with ionNameC field"});
+	// }
 
 	if (body.hasOwnProperty('latin') && _.isString(body.latin) && body.latin.trim().length >0) {
 		validAttributes.latin = body.latin
