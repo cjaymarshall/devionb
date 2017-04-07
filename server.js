@@ -101,12 +101,12 @@ app.get('/useThisArray', function (req, res) {
 
 // GET /useThisArray/:ionid--gets a specific ion
 
-app.get('/useThisArray/:ionId', function (req, res) {
+app.get('/useThisArray/:id', function (req, res) {
 	//res.json('Asking for ion with id of ' + req.params.ionId);
 
-	var ionIda = parseInt(req.params.ionId, 10);
+	var ionIda = parseInt(req.params.id, 10);
 
-	db.getIons.findById(ionIda).then(function(foundIon) {
+	db.getIons.findById(ionIda).then(function (foundIon) {
 		if(!!foundIon) {
 			res.json(foundIon.toJSON());
 		} else {
@@ -275,9 +275,9 @@ app.delete('/useThisArray/:id', function (req, res) {
 
 });
 
-app.put('/useThisArray/:ionId', function (req,res) {
+app.put('/useThisArray/:id', function (req,res) {
 
-	var ionIda = parseInt(req.params.ionId, 10);	
+	var ionIda = parseInt(req.params.id, 10);	
 	var body = _.pick(req.body, 'ionId', 'ions', 'ionCharge', 'ionName', 'ionNameA', 'ionNameB', 'ionNameC', 'ionNameD', 'latin', 'explanation', 'ox', 'typeall', 'typemono', 'typea', 'typemustknowa', 'typemustknowb', 'isTransMetal');
 	var attributes = {};
 
@@ -305,6 +305,47 @@ app.put('/useThisArray/:ionId', function (req,res) {
 	if (body.hasOwnProperty('ionNameD')) {
 			attributes.ionNameD = body.ionNameD
 	} 
+	if (body.hasOwnProperty('latin')) {
+			attributes.latin = body.latin
+	}
+	if (body.hasOwnProperty('explanation')) {
+			attributes.explanation = body.explanation
+	}
+	if (body.hasOwnProperty('ox')) {
+			attributes.ox = body.ox
+	} 
+	if (body.hasOwnProperty('typeall')) {
+			attributes.typeall = body.typeall
+	} 
+	if (body.hasOwnProperty('typemono')) {
+		attributes.typemono = body.typemono
+	} 
+	if (body.hasOwnProperty('typea')) {
+			attributes.typea = body.typea
+	} 
+	if (body.hasOwnProperty('typemustknowa')) {
+			attributes.typemustknowa = body.typemustknowa
+	} 
+	if (body.hasOwnProperty('typemustknowb')) {
+			attributes.typemustknowb = body.typemustknowb
+	} 
+	if (body.hasOwnProperty('isTransMetal')) {
+			attributes.isTransMetal = body.isTransMetal
+	} 
+
+	db.getIons.findById(ionIda).then(function (foundIon) {
+		if (foundIon) {
+			return foundIon.update(attributes);
+		} else {
+			res.status(404).send();
+			}
+		}, function () {
+			res.status(500).send();
+	}).then(function (foundIon) {
+		res.json(foundIon.toJSON());
+	}, function (e) {
+		res.status(400).json(e);
+	});
 
 					//makes sure ionId is seen as an integer
 	// var matchedIonId = _.findWhere(useThisArray, {ionId: ionIda});  //surfs the array finding the record in which the ionId equals the searched for value
@@ -368,52 +409,52 @@ app.put('/useThisArray/:ionId', function (req,res) {
 	// 	return res.status(400).json({"error": "Problem with ionNameC field"});
 	// }
 
-	if (body.hasOwnProperty('latin') && _.isString(body.latin) && body.latin.trim().length >0) {
-		validAttributes.latin = body.latin
-	} else {
-		validAttributes.latin = null
-	}
+	// if (body.hasOwnProperty('latin') && _.isString(body.latin) && body.latin.trim().length >0) {
+	// 	validAttributes.latin = body.latin
+	// } else {
+	// 	validAttributes.latin = null
+	// }
 
-	if (body.hasOwnProperty('explanation') && _.isNumber (body.explanation)) {
-		validAttributes.explanation = body.explanation
-	} else if (body.hasOwnProperty('explanation')) {
-		return res.status(400).json({"error": "Problem with epxlanation field"});
-	}
-	if (body.hasOwnProperty('ox') && _.isNumber (body.ox)) {
-		validAttributes.ox = body.ox
-	} else if (body.hasOwnProperty('ox')) {
-		return res.status(400).json({"error": "Problem with ox field"});
-	}
-	if (body.hasOwnProperty('typeall') && _.isNumber (body.typeall)) {
-		validAttributes.typeall = body.typeall
-	} else if (body.hasOwnProperty('typeall')) {
-		return res.status(400).json({"error": "Problem with typeall field"});
-	}
-	if (body.hasOwnProperty('typemono') && _.isNumber (body.typemono)) {
-		validAttributes.typemono = body.typemono
-	} else if (body.hasOwnProperty('typemono')) {
-		return res.status(400).json({"error": "Problem with typemono field"});
-	}
-	if (body.hasOwnProperty('typea') && _.isNumber(body.typea)) {
-		validAttributes.typea = body.typea
-	} else if (body.hasOwnProperty('typea')) {
-		return res.status(400).json({"error": "Problem with typea field"});
-	}
-	if (body.hasOwnProperty('typemustknowa') && _.isNumber (body.typemustknowa)) {
-		validAttributes.typemustknowa = body.typemustknowa
-	} else if (body.hasOwnProperty('typemustknowa')) {
-		return res.status(400).json({"error": "Problem with typemustknowa field"});
-	}
-	if (body.hasOwnProperty('typemustknowb') && _.isNumber (body.typemustknowb)) {
-		validAttributes.typemustknowb = body.typemustknowb
-	} else if (body.hasOwnProperty('typemustknowb')) {
-		return res.status(400).json({"error": "Problem with typemustknowb field"});
-	}
-	if (body.hasOwnProperty('isTransMetal') && _.isNumber (body.isTransMetal)) {
-		validAttributes.isTransMetal = body.isTransMetal
-	} else if (body.hasOwnProperty('isTransMetal')) {
-		return res.status(400).json({"error": "Problem with isTransMetal field"});
-	}
+	// if (body.hasOwnProperty('explanation') && _.isNumber (body.explanation)) {
+	// 	validAttributes.explanation = body.explanation
+	// } else if (body.hasOwnProperty('explanation')) {
+	// 	return res.status(400).json({"error": "Problem with epxlanation field"});
+	// }
+	// if (body.hasOwnProperty('ox') && _.isNumber (body.ox)) {
+	// 	validAttributes.ox = body.ox
+	// } else if (body.hasOwnProperty('ox')) {
+	// 	return res.status(400).json({"error": "Problem with ox field"});
+	// }
+	// if (body.hasOwnProperty('typeall') && _.isNumber (body.typeall)) {
+	// 	validAttributes.typeall = body.typeall
+	// } else if (body.hasOwnProperty('typeall')) {
+	// 	return res.status(400).json({"error": "Problem with typeall field"});
+	// }
+	// if (body.hasOwnProperty('typemono') && _.isNumber (body.typemono)) {
+	// 	validAttributes.typemono = body.typemono
+	// } else if (body.hasOwnProperty('typemono')) {
+	// 	return res.status(400).json({"error": "Problem with typemono field"});
+	// }
+	// if (body.hasOwnProperty('typea') && _.isNumber(body.typea)) {
+	// 	validAttributes.typea = body.typea
+	// } else if (body.hasOwnProperty('typea')) {
+	// 	return res.status(400).json({"error": "Problem with typea field"});
+	// }
+	// if (body.hasOwnProperty('typemustknowa') && _.isNumber (body.typemustknowa)) {
+	// 	validAttributes.typemustknowa = body.typemustknowa
+	// } else if (body.hasOwnProperty('typemustknowa')) {
+	// 	return res.status(400).json({"error": "Problem with typemustknowa field"});
+	// }
+	// if (body.hasOwnProperty('typemustknowb') && _.isNumber (body.typemustknowb)) {
+	// 	validAttributes.typemustknowb = body.typemustknowb
+	// } else if (body.hasOwnProperty('typemustknowb')) {
+	// 	return res.status(400).json({"error": "Problem with typemustknowb field"});
+	// }
+	// if (body.hasOwnProperty('isTransMetal') && _.isNumber (body.isTransMetal)) {
+	// 	validAttributes.isTransMetal = body.isTransMetal
+	// } else if (body.hasOwnProperty('isTransMetal')) {
+	// 	return res.status(400).json({"error": "Problem with isTransMetal field"});
+	// }
 
 	
 
