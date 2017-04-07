@@ -386,14 +386,14 @@ app.post('/useThisArray', function (req,res) {
 
 });
 
-app.delete('/useThisArray/:ionId', function (req, res) {
+app.delete('/useThisArray/:id', function (req, res) {
 	//res.json('Asking for ion with id of ' + req.params.ionId);
 
-	var ionIda = parseInt(req.params.ionId, 10);
+	var ionIda = parseInt(req.params.id, 10);
 
 	db.getIons.destroy({
 		where: {
-			ionId: ionIda
+			id: ionIda
 		}
 	}).then(function (recordsDeleted) {
 		if (recordsDeleted ===0) {
@@ -406,6 +406,27 @@ app.delete('/useThisArray/:ionId', function (req, res) {
 	}, function () {
 		res.status(500).send();
 	});
+
+// app.delete('/useThisArray/:ionId', function (req, res) {
+// 	//res.json('Asking for ion with id of ' + req.params.ionId);
+
+// 	var ionIda = parseInt(req.params.ionId, 10);
+
+// 	db.getIons.destroy({
+// 		where: {
+// 			ionId: ionIda
+// 		}
+// 	}).then(function (recordsDeleted) {
+// 		if (recordsDeleted ===0) {
+// 			res.status(404).json({
+// 				error: 'No ion with id'
+// 			});
+// 		} else {
+// 			res.status(204).send();
+// 		}
+// 	}, function () {
+// 		res.status(500).send();
+// 	});
 
 	// app.delete('/useThisArray/:ionName', function (req, res) {
 	// //res.json('Asking for ion with id of ' + req.params.ionId);
