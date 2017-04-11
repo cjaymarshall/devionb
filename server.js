@@ -8,6 +8,7 @@ var _ = require('underscore');
 
 var db = require('./db.js');
 
+
 //set the middleware variable to require the file 'middleware.js', a custom middleware script that adds a logger function to app
 
 var middleware = require('./middleware.js')
@@ -16,7 +17,8 @@ var app = express();
 
 app.use(bodyParser.json());
 
-//var http = require('http').Server(app);
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
 
 
 
@@ -35,41 +37,41 @@ app.use(bodyParser.json());
 app.use(middleware.logger);
 
 //the about path-just gets the page with 'about us' on it
-app.get('/about', function (req,res) {
+// app.get('/about', function (req,res) {
 
-	res.send('About Us');
+// 	res.send('About Us');
 
- });
+//  });
 
 // GET /useThisArray?ox=2
 
-app.get('/useThisArray', function (req, res) {
+// app.get('/useThisArray', function (req, res) {
 
-	var query = req.query;
-	var where = {};
+// 	var query = req.query;
+// 	var where = {};
 
-	if (query.hasOwnProperty('ox')) {
+// 	if (query.hasOwnProperty('ox')) {
 
-		var val = parseInt(query.ox,10);
-	 	console.log(val);
-	 	where.ox = val;
-	}
+// 		var val = parseInt(query.ox,10);
+// 	 	console.log(val);
+// 	 	where.ox = val;
+// 	}
 
-	if (query.hasOwnProperty('q') && query.q.length >0) {
+// 	if (query.hasOwnProperty('q') && query.q.length >0) {
 
-		where.ions = {
-			$like: query.q + '%'
-		};
+// 		where.ions = {
+// 			$like: query.q + '%'
+// 		};
 
-	}
+// 	}
 
-	db.getIons.findAll({where: where}).then(function (foundIons) {
+// 	db.getIons.findAll({where: where}).then(function (foundIons) {
 
-		res.json(foundIons);
+// 		res.json(foundIons);
 
-	}, function(e) {
-		res.status(500).send();
-	});
+// 	}, function(e) {
+// 		res.status(500).send();
+// 	});
 
 
 
@@ -97,24 +99,24 @@ app.get('/useThisArray', function (req, res) {
 
 	// res.json(filteredUseThisArray);
 
-});
+// });
 
 // GET /useThisArray/:ionid--gets a specific ion
 
-app.get('/useThisArray/:id', function (req, res) {
-	//res.json('Asking for ion with id of ' + req.params.ionId);
+// app.get('/useThisArray/:id', function (req, res) {
+// 	//res.json('Asking for ion with id of ' + req.params.ionId);
 
-	var ionIda = parseInt(req.params.id, 10);
+// 	var ionIda = parseInt(req.params.id, 10);
 
-	db.getIons.findById(ionIda).then(function (foundIon) {
-		if(!!foundIon) {
-			res.json(foundIon.toJSON());
-		} else {
-			res.status(404).send();
-		}
-	}, function(e) {
-		res.status(500).send();
-	});
+// 	db.getIons.findById(ionIda).then(function (foundIon) {
+// 		if(!!foundIon) {
+// 			res.json(foundIon.toJSON());
+// 		} else {
+// 			res.status(404).send();
+// 		}
+// 	}, function(e) {
+// 		res.status(500).send();
+// 	});
 
 
 	// var matchedIonId = _.findWhere(useThisArray, {ionId: ionIda});
@@ -130,17 +132,17 @@ app.get('/useThisArray/:id', function (req, res) {
 
 	// }
 
-});
+// });
 
-app.post('/useThisArray', function (req,res) {
+// app.post('/useThisArray', function (req,res) {
 
-	var body = _.pick(req.body, 'ionId', 'ions', 'ionCharge', 'ionName', 'ionNameA', 'ionNameB', 'ionNameC', 'ionNameD', 'latin', 'explanation', 'ox', 'typeall', 'typemono', 'typepa', 'typemustknowa', 'typemustknowb', 'isTransMetal');
+// 	var body = _.pick(req.body, 'ionId', 'ions', 'ionCharge', 'ionName', 'ionNameA', 'ionNameB', 'ionNameC', 'ionNameD', 'latin', 'explanation', 'ox', 'typeall', 'typemono', 'typepa', 'typemustknowa', 'typemustknowb', 'isTransMetal');
 
-	db.getIons.create(body).then(function(addedIon) {
-		res.json(addedIon.toJSON());
-	},function(e) {
-		res.status(400).json(e);
-	});
+// 	db.getIons.create(body).then(function(addedIon) {
+// 		res.json(addedIon.toJSON());
+// 	},function(e) {
+// 		res.status(400).json(e);
+// 	});
 
 	//  if 	(!_.isNumber(body.ionId) ||				//makes certain all fields contain the right info
 	// 		!_.isString(body.ions) ||
@@ -191,28 +193,28 @@ app.post('/useThisArray', function (req,res) {
 
 
 
-});
+// });
 
-app.delete('/useThisArray/:id', function (req, res) {
-	//res.json('Asking for ion with id of ' + req.params.ionId);
+// app.delete('/useThisArray/:id', function (req, res) {
+// 	//res.json('Asking for ion with id of ' + req.params.ionId);
 
-	var ionIda = parseInt(req.params.id, 10);
+// 	var ionIda = parseInt(req.params.id, 10);
 
-	db.getIons.destroy({
-		where: {
-			id: ionIda
-		}
-	}).then(function (recordsDeleted) {
-		if (recordsDeleted ===0) {
-			res.status(404).json({
-				error: 'No ion with id'
-			});
-		} else {
-			res.status(204).send();
-		}
-	}, function () {
-		res.status(500).send();
-	});
+// 	db.getIons.destroy({
+// 		where: {
+// 			id: ionIda
+// 		}
+// 	}).then(function (recordsDeleted) {
+// 		if (recordsDeleted ===0) {
+// 			res.status(404).json({
+// 				error: 'No ion with id'
+// 			});
+// 		} else {
+// 			res.status(204).send();
+// 		}
+// 	}, function () {
+// 		res.status(500).send();
+// 	});
 
 // app.delete('/useThisArray/:ionId', function (req, res) {
 // 	//res.json('Asking for ion with id of ' + req.params.ionId);
@@ -273,79 +275,79 @@ app.delete('/useThisArray/:id', function (req, res) {
 
 	// }
 
-});
+// });
 
-app.put('/useThisArray/:id', function (req,res) {
+// app.put('/useThisArray/:id', function (req,res) {
 
-	var ionIda = parseInt(req.params.id, 10);	
-	var body = _.pick(req.body, 'ionId', 'ions', 'ionCharge', 'ionName', 'ionNameA', 'ionNameB', 'ionNameC', 'ionNameD', 'latin', 'explanation', 'ox', 'typeall', 'typemono', 'typea', 'typemustknowa', 'typemustknowb', 'isTransMetal');
-	var attributes = {};
+// 	var ionIda = parseInt(req.params.id, 10);	
+// 	var body = _.pick(req.body, 'ionId', 'ions', 'ionCharge', 'ionName', 'ionNameA', 'ionNameB', 'ionNameC', 'ionNameD', 'latin', 'explanation', 'ox', 'typeall', 'typemono', 'typea', 'typemustknowa', 'typemustknowb', 'isTransMetal');
+// 	var attributes = {};
 
-	if (body.hasOwnProperty('ionId')) {
-			attributes.ionId = body.ionId
-		}
-	if (body.hasOwnProperty('ions')) {
-			attributes.ions = body.ions
-	}	
-	if (body.hasOwnProperty('ionCharge')) {
-			attributes.ionCharge = body.ionCharge
-	} 
-	if (body.hasOwnProperty('ionName')) {
-			attributes.ionName = body.ionName
-	}
-	if (body.hasOwnProperty('ionNameA')) {
-			attributes.ionNameA = body.ionNameA
-	} 
-	if (body.hasOwnProperty('ionNameB')) {
-			attributes.ionNameB = body.ionNameB
-	} 
-	if (body.hasOwnProperty('ionNameC')) {
-			attributes.ionNameC = body.ionNameC
-	} 
-	if (body.hasOwnProperty('ionNameD')) {
-			attributes.ionNameD = body.ionNameD
-	} 
-	if (body.hasOwnProperty('latin')) {
-			attributes.latin = body.latin
-	}
-	if (body.hasOwnProperty('explanation')) {
-			attributes.explanation = body.explanation
-	}
-	if (body.hasOwnProperty('ox')) {
-			attributes.ox = body.ox
-	} 
-	if (body.hasOwnProperty('typeall')) {
-			attributes.typeall = body.typeall
-	} 
-	if (body.hasOwnProperty('typemono')) {
-		attributes.typemono = body.typemono
-	} 
-	if (body.hasOwnProperty('typea')) {
-			attributes.typea = body.typea
-	} 
-	if (body.hasOwnProperty('typemustknowa')) {
-			attributes.typemustknowa = body.typemustknowa
-	} 
-	if (body.hasOwnProperty('typemustknowb')) {
-			attributes.typemustknowb = body.typemustknowb
-	} 
-	if (body.hasOwnProperty('isTransMetal')) {
-			attributes.isTransMetal = body.isTransMetal
-	} 
+// 	if (body.hasOwnProperty('ionId')) {
+// 			attributes.ionId = body.ionId
+// 		}
+// 	if (body.hasOwnProperty('ions')) {
+// 			attributes.ions = body.ions
+// 	}	
+// 	if (body.hasOwnProperty('ionCharge')) {
+// 			attributes.ionCharge = body.ionCharge
+// 	} 
+// 	if (body.hasOwnProperty('ionName')) {
+// 			attributes.ionName = body.ionName
+// 	}
+// 	if (body.hasOwnProperty('ionNameA')) {
+// 			attributes.ionNameA = body.ionNameA
+// 	} 
+// 	if (body.hasOwnProperty('ionNameB')) {
+// 			attributes.ionNameB = body.ionNameB
+// 	} 
+// 	if (body.hasOwnProperty('ionNameC')) {
+// 			attributes.ionNameC = body.ionNameC
+// 	} 
+// 	if (body.hasOwnProperty('ionNameD')) {
+// 			attributes.ionNameD = body.ionNameD
+// 	} 
+// 	if (body.hasOwnProperty('latin')) {
+// 			attributes.latin = body.latin
+// 	}
+// 	if (body.hasOwnProperty('explanation')) {
+// 			attributes.explanation = body.explanation
+// 	}
+// 	if (body.hasOwnProperty('ox')) {
+// 			attributes.ox = body.ox
+// 	} 
+// 	if (body.hasOwnProperty('typeall')) {
+// 			attributes.typeall = body.typeall
+// 	} 
+// 	if (body.hasOwnProperty('typemono')) {
+// 		attributes.typemono = body.typemono
+// 	} 
+// 	if (body.hasOwnProperty('typea')) {
+// 			attributes.typea = body.typea
+// 	} 
+// 	if (body.hasOwnProperty('typemustknowa')) {
+// 			attributes.typemustknowa = body.typemustknowa
+// 	} 
+// 	if (body.hasOwnProperty('typemustknowb')) {
+// 			attributes.typemustknowb = body.typemustknowb
+// 	} 
+// 	if (body.hasOwnProperty('isTransMetal')) {
+// 			attributes.isTransMetal = body.isTransMetal
+// 	} 
 
-	db.getIons.findById(ionIda).then(function (foundIon) {
-		if (foundIon) {
-			foundIon.update(attributes).then(function (foundIon) {
-				res.json(foundIon.toJSON());
-			}, function (e) {
-				res.status(400).json(e);
-			});
-		} else {
-			res.status(404).send();
-			}
-		}, function () {
-			res.status(500).send();
-	});
+	// db.getIons.findById(ionIda).then(function (foundIon) {
+	// 	if (foundIon) {
+	// 		foundIon.update(attributes).then(function (foundIon) {
+	// 			res.json(foundIon.toJSON());
+	// 		}, function (e) {
+	// 			res.status(400).json(e);
+	// 		});
+	// 	} else {
+	// 		res.status(404).send();
+	// 		}
+	// 	}, function () {
+	// 		res.status(500).send();
+	// });
 
 					//makes sure ionId is seen as an integer
 	// var matchedIonId = _.findWhere(useThisArray, {ionId: ionIda});  //surfs the array finding the record in which the ionId equals the searched for value
@@ -459,23 +461,79 @@ app.put('/useThisArray/:id', function (req,res) {
 	
 
 
-});
+// });
 
 
 db.sequelize.sync({
  	force: false
  	}).then(function () {
 
-	app.listen(PORT, function() {
-
-	console.log("Server Started on port " + PORT  + "!");
-
-	});
+	// app.listen(PORT, function() {
 
 	app.use(express.static(__dirname + '/public')); 
 
+	io.on('connection', function(socket) {
+		console.log('User connected via socket.io');
 
+		socket.send('Send message');
+		socket.emit('test',5);
+		socket.on('testBack', function (data) {
+			console.log(data);
+		});
+		socket.on('quizType', function (data) {
+			console.log(data)
 
+			where = {};
+
+			if(data === 1) {
+				console.log('quizType is All Ions');
+				where.typeall = 1
+			}
+			if(data === 2) {
+				console.log('quizType is Ions You Must Know-High School (just main group and polyatomic ions');
+				where.typemustknowa = 1
+			}
+			if(data === 3) {
+				console.log('quizType is all polyatomic ions');
+				where.typepa = 1
+			}
+
+				
+			db.getIons.findAll({
+
+				where: where,
+				order: [
+					[db.Sequelize.fn('RANDOM')]
+				]
+
+			}).then(function (foundIons) {
+			socket.emit('useThisArray',foundIons);
+					
+			console.log(foundIons);
+
+				});
+
+			//});
+		
+
+	});
+
+		socket.on('disconnect', function () {
+			console.log ('A user disconnected');
+
+		
+		});
+	});
+	
+	
+
+	http.listen(PORT, function () {
+
+		console.log("Server Started on port " + PORT  + "!");
+
+	});
+
+	
 });
 
 

@@ -12,10 +12,23 @@
         <script type="text/javascript" src="qtype.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+        <script src = "https://cdn.socket.io/socket.io-1.4.5.js"></script>
+       
 
         
         
         <script>
+
+        var socket = io();
+        socket.on('message',function (data) {
+          console.log(data);
+        });
+        socket.on('test', function (data) {
+          console.log(data);
+        });
+        socket.emit('testBack', 'got 5');
+
+          
 
         var practiceName="";
         var quizType;
@@ -109,12 +122,20 @@
 
              $('#allIons').on('click', function(){
               quizType = 1;
+              socket.emit('quizType', 1);
+              socket.on('useThisArray', function (data) {
+                console.log(data);
+              });
               $('#quizType').fadeOut(300);
               setTimeout(getNumQ, 300);
 
             });
               $('#ionsYouMustKnowA').on('click', function(){
               quizType = 2;
+              socket.emit('quizType', 2);
+              socket.on('useThisArray', function (data) {
+                console.lob(data);
+              });
               $('#quizType').fadeOut(300);
               quizTypeExp(quizType);
 
@@ -131,6 +152,12 @@
 
                $('#allPolyatomicIons').on('click', function(){
               quizType = 3;
+              socket.emit('quizType', 3);
+              socket.on('useThisArray', function (data) {
+                console.log(data);
+                useThisArray = data
+                console.log(useThisArray);
+              });
               $('#quizType').fadeOut(300);
               setTimeout(getNumQ, 300);
 
@@ -408,32 +435,34 @@
             }
 
           function startButton() {
-            //alert('Got to start button')
-           // alert(quizType);
-             // alert(numQ);
+            alert('Got to start button')
+            alert(quizType);
+            alert(numQ);
 
-                $.ajax({
+            
 
-                 type: 'POST',
-                 url: 'ion.php',
-                 data: { 
-                  "qType": quizType,
-                  "numQ": numQ
-                  },
-                 dataType: 'json',
-                 success: function(data) {
+              //   $.ajax({
+
+              //    type: 'POST',
+              //    url: 'ion.php',
+              //    data: { 
+              //     "qType": quizType,
+              //     "numQ": numQ
+              //     },
+              //    dataType: 'json',
+              //    success: function(data) {
                  
                  
                   
-                  for(var i = 0; i<numQ; i++) {
+              //     for(var i = 0; i<numQ; i++) {
 
-                    var pushElement = data[0][i];
-                    useThisArray.push(pushElement); 
-                  }
+              //       var pushElement = data[0][i];
+              //       useThisArray.push(pushElement); 
+              //     }
 
-                }
+              //   }
 
-              });
+              // });
             
             $('#titlespan').append("<span class='smallerblackarial'>" + practiceName +", Begin your practice session of " + numQ + " questions by clicking the 'Start Practice' button.").fadeIn(300);
             $('#startButton').fadeIn(1000);
@@ -1056,6 +1085,7 @@
 </head>
 
 <body class="ltgrn">
+   
 
   <!--This div contains the splash page info-->
   <div id="main"> 
