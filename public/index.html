@@ -125,6 +125,8 @@
               socket.emit('quizType', 1);
               socket.on('useThisArray', function (data) {
                 console.log(data);
+                useThisArray=data;
+                console.log(useThisArray);
               });
               $('#quizType').fadeOut(300);
               setTimeout(getNumQ, 300);
@@ -134,7 +136,7 @@
               quizType = 2;
               socket.emit('quizType', 2);
               socket.on('useThisArray', function (data) {
-                console.lob(data);
+                console.log(data);
               });
               $('#quizType').fadeOut(300);
               quizTypeExp(quizType);
