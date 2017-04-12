@@ -17,8 +17,8 @@ var app = express();
 
 app.use(bodyParser.json());
 
-//var http = require('http').Server(app);
-//var io = require('socket.io')(http);
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
 
 
 
@@ -45,35 +45,35 @@ app.use(middleware.logger);
 
 // GET /useThisArray?ox=2
 
-app.get('/useThisArray', function (req, res) {
+// app.get('/useThisArray', function (req, res) {
 
-	var query = req.query;
-	var where = {};
+// 	var query = req.query;
+// 	var where = {};
 
-	if (query.hasOwnProperty('ox')) {
+// 	if (query.hasOwnProperty('ox')) {
 
-		var val = parseInt(query.ox,10);
-	 	console.log(val);
-	 	where.ox = val;
-	}
+// 		var val = parseInt(query.ox,10);
+// 	 	console.log(val);
+// 	 	where.ox = val;
+// 	}
 
-	if (query.hasOwnProperty('q') && query.q.length >0) {
+// 	if (query.hasOwnProperty('q') && query.q.length >0) {
 
-		where.ions = {
-			$like: query.q + '%'
-		};
+// 		where.ions = {
+// 			$like: query.q + '%'
+// 		};
 
-	}
+// 	}
 
-	db.getIons.findAll({where: where}).then(function (foundIons) {
+// 	db.getIons.findAll({where: where}).then(function (foundIons) {
 
-		res.json(foundIons);
+// 		res.json(foundIons);
 
-	}, function(e) {
-		res.status(500).send();
-	});
+// 	}, function(e) {
+// 		res.status(500).send();
+// 	});
 
-});
+// });
 
 	//var queryParams = req.query;
 
@@ -134,15 +134,15 @@ app.get('/useThisArray', function (req, res) {
 
 // });
 
-app.post('/useThisArray', function (req,res) {
+// app.post('/useThisArray', function (req,res) {
 
-	var body = _.pick(req.body, 'ionId', 'ions', 'ionCharge', 'ionName', 'ionNameA', 'ionNameB', 'ionNameC', 'ionNameD', 'latin', 'explanation', 'ox', 'typeall', 'typemono', 'typepa', 'typemustknowa', 'typemustknowb', 'isTransMetal');
+// 	var body = _.pick(req.body, 'ionId', 'ions', 'ionCharge', 'ionName', 'ionNameA', 'ionNameB', 'ionNameC', 'ionNameD', 'latin', 'explanation', 'ox', 'typeall', 'typemono', 'typepa', 'typemustknowa', 'typemustknowb', 'isTransMetal');
 
-	db.getIons.create(body).then(function(addedIon) {
-		res.json(addedIon.toJSON());
-	},function(e) {
-		res.status(400).json(e);
-	});
+// 	db.getIons.create(body).then(function(addedIon) {
+// 		res.json(addedIon.toJSON());
+// 	},function(e) {
+// 		res.status(400).json(e);
+// 	});
 
 	//  if 	(!_.isNumber(body.ionId) ||				//makes certain all fields contain the right info
 	// 		!_.isString(body.ions) ||
@@ -193,7 +193,7 @@ app.post('/useThisArray', function (req,res) {
 
 
 
-});
+// });
 
 // app.delete('/useThisArray/:id', function (req, res) {
 // 	//res.json('Asking for ion with id of ' + req.params.ionId);
@@ -468,66 +468,66 @@ db.sequelize.sync({
  	force: false
  	}).then(function () {
 
-	 app.listen(PORT, function() {
+	 //app.listen(PORT, function() {
 
-	//app.use(express.static(__dirname + '/public')); 
+	app.use(express.static(__dirname + '/public')); 
 
-	// io.on('connection', function(socket) {
-	// 	console.log('User connected via socket.io');
+	io.on('connection', function(socket) {
+		console.log('User connected via socket.io');
 
-	// 	socket.send('Send message');
-	// 	socket.emit('test',5);
-	// 	socket.on('testBack', function (data) {
-	// 		console.log(data);
-	// 	});
-	// 	socket.on('quizType', function (data) {
-	// 		console.log(data)
+		socket.send('Send message');
+		socket.emit('test',5);
+		socket.on('testBack', function (data) {
+			console.log(data);
+		});
+		socket.on('quizType', function (data) {
+			console.log(data)
 
-	// 		where = {};
+			where = {};
 
-	// 		if(data === 1) {
-	// 			console.log('quizType is All Ions');
-	// 			where.typeall = 1
-	// 		}
-	// 		if(data === 2) {
-	// 			console.log('quizType is Ions You Must Know-High School (just main group and polyatomic ions');
-	// 			where.typemustknowa = 1
-	// 		}
-	// 		if(data === 3) {
-	// 			console.log('quizType is all polyatomic ions');
-	// 			where.typepa = 1
-	// 		}
+			if(data === 1) {
+				console.log('quizType is All Ions');
+				where.typeall = 1
+			}
+			if(data === 2) {
+				console.log('quizType is Ions You Must Know-High School (just main group and polyatomic ions');
+				where.typemustknowa = 1
+			}
+			if(data === 3) {
+				console.log('quizType is all polyatomic ions');
+				where.typepa = 1
+			}
 
 				
-	// 		db.getIons.findAll({
+			db.getIons.findAll({
 
-	// 			where: where,
-	// 			order: [
-	// 				[db.Sequelize.fn('RAND')]
-	// 			]
+				where: where,
+				order: [
+					[db.Sequelize.fn('RAND')]
+				]
 
-	// 		}).then(function (foundIons) {
-	// 		socket.emit('useThisArray',foundIons);
+			}).then(function (foundIons) {
+			socket.emit('useThisArray',foundIons);
 					
-	// 		console.log(foundIons);
+			console.log(foundIons);
 
-	// 			});
+				});
 
-	// 		//});
+			//});
 		
 
-	// });
+	});
 
-	// 	socket.on('disconnect', function () {
-	// 		console.log ('A user disconnected');
+		socket.on('disconnect', function () {
+			console.log ('A user disconnected');
 
 		
-	// 	});
-	// });
+		});
+	});
 	
 	
 
-	// http.listen(PORT, function () {
+	http.listen(PORT, function () {
 
 		console.log("Server Started on port " + PORT  + "!");
 
