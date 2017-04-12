@@ -502,9 +502,8 @@ db.sequelize.sync({
 			db.getIons.findAll({
 
 				where: where,
-				order: [
-					[db.Sequelize.fn('RAND')]
-				]
+				order: [db.Sequelize.fn('RANDOM')]
+				
 
 			}).then(function (foundIons) {
 			socket.emit('useThisArray',foundIons);
