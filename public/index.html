@@ -5,7 +5,7 @@
 
     <title>Ion-Naming Practice</title>
 
-    <link rel="stylesheet" href="style.css" type="text/css" />
+    <link rel="stylesheet" href="../style.css" type="text/css" />
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
 
 
@@ -443,28 +443,6 @@
 
             
 
-              //   $.ajax({
-
-              //    type: 'POST',
-              //    url: 'ion.php',
-              //    data: { 
-              //     "qType": quizType,
-              //     "numQ": numQ
-              //     },
-              //    dataType: 'json',
-              //    success: function(data) {
-                 
-                 
-                  
-              //     for(var i = 0; i<numQ; i++) {
-
-              //       var pushElement = data[0][i];
-              //       useThisArray.push(pushElement); 
-              //     }
-
-              //   }
-
-              // });
             
             $('#titlespan').append("<span class='smallerblackarial'>" + practiceName +", Begin your practice session of " + numQ + " questions by clicking the 'Start Practice' button.").fadeIn(300);
             $('#startButton').fadeIn(1000);
@@ -488,6 +466,8 @@
 
                 var ionArrays = [useThisArray[i].ionName,useThisArray[i].ionNameA,useThisArray[i].ionNameB,useThisArray[i].ionNameC,useThisArray[i].ionNameD]
                 //alert(ionArrays[0], ionArrays[1])
+
+                console.log (ionArrays)
 
                   ionSymbol = useThisArray[i].ions + useThisArray[i].ionCharge;
                   }
